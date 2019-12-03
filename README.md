@@ -1,5 +1,5 @@
-# Introduction
-My first repo playing around with Keras. Still waiting on my CoreX Chroma eGPU to run heavier models.
+# Goal
+Getting aquainted with Keras. Still waiting on my CoreX Chroma eGPU to run heavier models.
 
 ## CNN
 Simply convolutional neural network that is trained on images of cats and dogs.   
@@ -17,6 +17,14 @@ I used an adam optimizer (similar but not really stochastic gradient descent)
 The loss function is binary cross entropy. There is also a 50% dropout in the ANN.  
 
 The model is trained on 8000 images of cats and dogs, and tested on 2000. Max accuracy in 91%.   
+
+## ANN for Snake 
+Custom built snake game using pygame library. not fully complete yet, but can be run by downloading the files:  
+snake.py, game.py, food.y and field.py  
+simply run through game.py  
+
+Constructing an ANN through which the agent will both learn how to play and win (to the best of their abilities) the game of snake, with no prior knowledge of the game coded in. 
+
 
 ## Future work 
 Add cross validation  
