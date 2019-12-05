@@ -19,10 +19,12 @@ The loss function is binary cross entropy. There is also a 50% dropout in the AN
 The model is trained on 8000 images of cats and dogs, and tested on 2000. Max accuracy in 91%.   
 
 ## ANN for Snake 
-Custom built snake game using pygame library. not fully complete yet, but can be run by downloading the files:  
+Custom built snake game using pygame library.  
 snake.py, game.py, food.y and field.py  
+  
 simply run through game.py  
-
+    
+to configure the different sensor and radar visuals, refer to field.py file under the function 'update'  
 Constructing an ANN through which the agent will both learn how to play and win (to the best of their abilities) the game of snake, with no prior knowledge of the game coded in. 
 
 
