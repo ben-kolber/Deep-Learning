@@ -21,7 +21,6 @@ class Field:
         for l in range(rows):
             x = x + self.grid_w
             y = y + self.grid_w
-
             pygame.draw.line(self.win, (255, 255, 255), (x, 0), (x, self.w))
             pygame.draw.line(self.win, (255, 255, 255), (0, y), (self.h, y))
 
@@ -32,19 +31,19 @@ class Field:
         # self.drawGrid()
 
         # snake location
-        pygame.draw.rect(self.win, (0, 255, 0), (snake.x, snake.y, snake.w, snake.h))
+        for ligement in snake.body:
+            pygame.draw.rect(self.win, (0, 255, 0), (ligement.x, ligement.y, snake.w, snake.h))
 
         # food location
         pygame.draw.circle(self.win, (255, 255, 0), (food.x, food.y), 15)
-
         pygame.display.update()
 
+    # death screen
     def end_game(self, snake):
-        print(snake.x)
-        print(snake.y)
-        pygame.draw.rect(self.win, (255, 0, 0), (snake.x, snake.y, snake.w, snake.h))
+        pygame.draw.rect(self.win, (255, 0, 0), (snake.head.x, snake.head.y, snake.w, snake.h))
         pygame.display.update()
         font = pygame.font.Font('freesansbold.ttf', 64)
+        time.sleep(0.5)
         losing_text = font.render('GAME OVER...', True, (255, 0, 0), (255, 255, 255))
         textRect = losing_text.get_rect()
         textRect.center = (self.h/2, self.w/2)
