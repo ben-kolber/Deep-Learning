@@ -1,4 +1,5 @@
 import random
+import math
 
 from body import Body
 
@@ -26,3 +27,6 @@ class Food:
             self.y = random.randint(0, self.rows) * snake.field.grid_w + snake.field.grid_w // 2
             snake.score += 1
             snake.grow()
+
+    def distance_to_food(self, coordinates):
+        return math.sqrt((coordinates[0] - self.x)**2 + (coordinates[1] - self.y)**2)

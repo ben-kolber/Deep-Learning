@@ -24,9 +24,6 @@ class Body():
     def move_down(self, snake, ligament):
         ligament.y += snake.h + 1
 
-    def transition(self, snake, move):
-        self.update(self, 'down', self.get_location(
-            self.x, self.y))
 
     def update(self, snake, legiment, move, loc):
         self.prev_loc = loc
