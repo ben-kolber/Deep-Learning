@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 from body import Body
 
@@ -17,7 +18,7 @@ class Snake:
         self.body = [self.head]
 
     # a list of possible future locations
-    # Structure:
+    #
     #               2 3 4
     #               1 * 5
     #               8 7 6
@@ -26,7 +27,6 @@ class Snake:
         future_locations = []
         # based on head direction
         if self.head.exectued_move == 'right':
-            # future_locations.append([self.head.loc[0]-1, self.head.loc[1]])
             future_locations.append([self.head.loc[0]-1, self.head.loc[1]-1])
             future_locations.append([self.head.loc[0], self.head.loc[1]-1])
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]-1])
@@ -40,7 +40,6 @@ class Snake:
             future_locations.append([self.head.loc[0]-1, self.head.loc[1]-1])
             future_locations.append([self.head.loc[0], self.head.loc[1]-1])
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]-1])
-            # future_locations.append([self.head.loc[0]+1, self.head.loc[1]])
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]+1])
             future_locations.append([self.head.loc[0], self.head.loc[1]+1])
             future_locations.append([self.head.loc[0]-1, self.head.loc[1]+1])
@@ -52,13 +51,11 @@ class Snake:
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]-1])
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]])
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]+1])
-            # future_locations.append([self.head.loc[0], self.head.loc[1]+1])
             future_locations.append([self.head.loc[0]-1, self.head.loc[1]+1])
 
         if self.head.exectued_move == 'down':
             future_locations.append([self.head.loc[0]-1, self.head.loc[1]])
             future_locations.append([self.head.loc[0]-1, self.head.loc[1]-1])
-            # future_locations.append([self.head.loc[0], self.head.loc[1]-1])
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]-1])
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]])
             future_locations.append([self.head.loc[0]+1, self.head.loc[1]+1])
@@ -68,64 +65,58 @@ class Snake:
         return future_locations
 
     # scout ahead to see if body in vicity, if so return loc of body
-
+    #
+    #             v2    v3   v4
+    #                 2 3 4
+    #             v1  1 * 5  v5
+    #                 8 7 6
+    #             v8    v7   v6
+    #
     def radar(self):
-        range = 5
+        r = 5
         radar = []
-        for i in range(range):
-            if self.head.exectued_move == 'right':
-                # radar.append([self.head.loc[0]-i, self.head.loc[1]])
-                radar.append([self.head.loc[0]-i, self.head.loc[1]-i])
+        for i in range(r):
+            if self.head.exectued_move == 'right' and i != 0:
                 radar.append([self.head.loc[0], self.head.loc[1]-i])
                 radar.append([self.head.loc[0]+i, self.head.loc[1]-i])
                 radar.append([self.head.loc[0]+i, self.head.loc[1]])
                 radar.append([self.head.loc[0]+i, self.head.loc[1]+i])
                 radar.append([self.head.loc[0], self.head.loc[1]+i])
-                radar.append([self.head.loc[0]-i, self.head.loc[1]+i])
 
-            if self.head.exectued_move == 'left':
+            if self.head.exectued_move == 'left' and i != 0:
                 radar.append([self.head.loc[0]-i, self.head.loc[1]])
                 radar.append([self.head.loc[0]-i, self.head.loc[1]-i])
                 radar.append([self.head.loc[0], self.head.loc[1]-i])
-                radar.append([self.head.loc[0]+i, self.head.loc[1]-i])
-                # radar.append([self.head.loc[0]+i, self.head.loc[1]])
-                radar.append([self.head.loc[0]+i, self.head.loc[1]+i])
                 radar.append([self.head.loc[0], self.head.loc[1]+i])
                 radar.append([self.head.loc[0]-i, self.head.loc[1]+i])
 
-            if self.head.exectued_move == 'up':
+            if self.head.exectued_move == 'up' and i != 0:
                 radar.append([self.head.loc[0]-i, self.head.loc[1]])
                 radar.append([self.head.loc[0]-i, self.head.loc[1]-i])
                 radar.append([self.head.loc[0], self.head.loc[1]-i])
                 radar.append([self.head.loc[0]+i, self.head.loc[1]-i])
                 radar.append([self.head.loc[0]+i, self.head.loc[1]])
-                radar.append([self.head.loc[0]+i, self.head.loc[1]+i])
-                # radar.append([self.head.loc[0], self.head.loc[1]+i])
-                radar.append([self.head.loc[0]-i, self.head.loc[1]+i])
 
-            if self.head.exectued_move == 'down':
+            if self.head.exectued_move == 'down' and i != 0:
                 radar.append([self.head.loc[0]-i, self.head.loc[1]])
-                radar.append([self.head.loc[0]-i, self.head.loc[1]-i])
-                # radar.append([self.head.loc[0], self.head.loc[1]-i])
-                radar.append([self.head.loc[0]+i, self.head.loc[1]-i])
                 radar.append([self.head.loc[0]+i, self.head.loc[1]])
                 radar.append([self.head.loc[0]+i, self.head.loc[1]+i])
                 radar.append([self.head.loc[0], self.head.loc[1]+i])
                 radar.append([self.head.loc[0]-i, self.head.loc[1]+i])
 
-        # find ligament coordinates in the vicity of the radar
         collision = []
         for ligament in self.body:
             if ligament.loc in radar:
-                found.append(ligament.loc)
+                distance = math.sqrt((self.head.loc[0] - ligament.loc[0])
+                                     ** 2 + (self.head.loc[1] - ligament.loc[1])**2)
+                collision.append([ligament.loc, distance])
 
-        return collision
+        return collision, radar
 
     # status report of a specific snake ligament
-
     def report(self, ligament):
-        print('Current Loc: {}'.format(ligament.loc))
-        print('Previous Loc: {}'.format(ligament.prev_loc))
+        print('Head Loc: {}'.format(ligament.loc))
+        print('Previous Head Loc: {}'.format(ligament.prev_loc))
         print('Latest Move: {}'.format(ligament.exectued_move))
         print('Previous Move: {}'.format(ligament.prev_move))
         print(' ')
@@ -211,7 +202,6 @@ class Snake:
                 self.field.end_game(self)
 
     def grow(self):
-        print('Growing...')
 
         # generate new body part in tail's previous location
         loc = self.coordinate_to_pixel(self.tail.prev_loc)
@@ -220,5 +210,3 @@ class Snake:
         ligement = Body(loc[0], loc[1], self.head.exectued_move)
         self.body.append(ligement)
         self.tail = ligement
-
-        print('Structure: {}'.format(self.body))

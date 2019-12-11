@@ -8,23 +8,28 @@ class Food:
 
     def __init__(self, field, snake):
         self.rows = field.w // field.grid_w - 1
+        self.snake = snake
+        self.field = field
+        self.x = 0
+        self.y = 0
+        self.generate_food()
+
+    def generate_food(self):
         searching = True
         while searching:
-            self.x = random.randint(0, self.rows) * field.grid_w + field.grid_w // 2
-            self.y = random.randint(0, self.rows) * field.grid_w + field.grid_w // 2
-            for legament in snake.body:
-                if legament.loc == [self.x, self.y]:
+            self.x = random.randint(0, self.rows) * self.field.grid_w + self.field.grid_w // 2
+            self.y = random.randint(0, self.rows) * self.field.grid_w + self.field.grid_w // 2
+            for ligament in self.snake.body:
+                if ligament.loc == [self.x, self.y]:
                     searching = True
                     break
                 else:
                     searching = False
 
+    # check if food was eaten
     def eaten(self, snake):
-        # if food was eaten
         if snake.head.x + snake.w//2 == self.x and snake.head.y + snake.h // 2 == self.y:
-            print("FOOD FOUND!!")
-            self.x = random.randint(0, self.rows) * snake.field.grid_w + snake.field.grid_w // 2
-            self.y = random.randint(0, self.rows) * snake.field.grid_w + snake.field.grid_w // 2
+            self.generate_food()
             snake.score += 1
             snake.grow()
 

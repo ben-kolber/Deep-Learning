@@ -60,19 +60,19 @@ class Field:
             y = y + self.grid_w
             pygame.draw.line(self.win, (255, 255, 255), (x, 0), (x, self.w))
             pygame.draw.line(self.win, (255, 255, 255), (0, y), (self.h, y))
-
         pygame.display.update()
 
     def update(self, snake, food):
         self.win.fill((0, 0, 0))  # black
-        self.drawGrid()
 
+        # self.drawGrid()
         # snake location
         for ligament in snake.body:
             pygame.draw.rect(self.win, (0, 255, 0), (ligament.x, ligament.y, snake.w, snake.h))
 
-        # future locations
         future = snake.get_future_locations()
+        collisions, radar = snake.radar()
+
         for location in future:
             coordinates = self.coordinate_to_pixel(location)
 
@@ -80,7 +80,7 @@ class Field:
             pygame.draw.rect(self.win, (185, 210, 225),
                              (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4, snake.w//2, snake.h//2))
 
-            # distance to food at all times
+            # distance to food from future locations
             pygame.draw.line(
                 self.win, (255, 165, 0), (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4), (food.x, food.y))
             print('Location: {} ,Food dist: {}'.format(location, food.distance_to_food(
@@ -92,7 +92,30 @@ class Field:
                 self.win, (255, 165, 0), (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4), (cor[0] + snake.w//4, cor[1] + snake.w//4))
             print('Location: {} ,Wall dist: {}'.format(location, cor[2]))
 
+        '''
+        # radar area
+        for detect in radar:
+            coordinates = self.coordinate_to_pixel(detect)
+            pygame.draw.rect(self.win, (170, 220, 170),
+                             (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4, snake.w//2, snake.h//2))
+
+        '''
+        # draw the upcoming collisions
+        distance = 10
+        for collision in collisions:
+            coordinates = self.coordinate_to_pixel(collision[0])
+
+            # closest collision distance
+            if collision[1] < distance:
+                distance = collision[1]
+
+            pygame.draw.rect(self.win, (255, 0, 0),
+                             (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4, snake.w//2, snake.h//2))
+
+            # print('Collision Course at {} Distance {}'.format(collision[0], collision[1]))
         # food location
+        print('-' * 20)
+
         pygame.draw.circle(self.win, (255, 255, 0), (food.x, food.y), 12)
         pygame.display.update()
 
