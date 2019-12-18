@@ -1,16 +1,17 @@
 import pygame
 import time
 import math
+import random
 
 
 class Field:
 
     def __init__(self, height, width, grid_w):
-        pygame.init()
         self.h = height
         self.grid_w = grid_w
         self.w = width
-        self.win = pygame.display.set_mode((height, width))
+        pygame.init()
+        self.win = pygame.display.set_mode((self.h, self.w))
         pygame.display.set_caption("Snake")
         self.win.fill((0, 0, 0))  # black
         pygame.display.update()
@@ -21,19 +22,10 @@ class Field:
         return([x, y])
 
     # return distance to closest wall
-    # but first computes distance to all 4 walls
-    # coordinates are taking in pixels
     def distance_to_closest_wall(self, coordinates):
-        # distance to top wall
         top = coordinates[1]
-
-        # distance to bottom wall
         bottom = self.h - coordinates[1]
-
-        # distance to left wall
         left = coordinates[0]
-
-        # distance to right wall
         right = self.w - coordinates[0]
 
         val = min(top, bottom, left, right)
@@ -41,13 +33,10 @@ class Field:
         # return coordinates of closest wall point and distance to it
         if val == top:
             return [coordinates[0], 0, coordinates[1]]
-
         if val == bottom:
             return [coordinates[0], self.h, self.h - coordinates[1]]
-
         if val == left:
             return [0, coordinates[1], coordinates[0]]
-
         if val == right:
             return [self.w, coordinates[1], self.w - coordinates[0]]
 
@@ -62,6 +51,41 @@ class Field:
             pygame.draw.line(self.win, (255, 255, 255), (0, y), (self.h, y))
         pygame.display.update()
 
+    def replay(self, moves_list, food_locations, death_loc, msg):
+
+        game_exit = False
+        replay_complete = False
+        i = 0
+        MAX_ITER = len(moves_list)
+        print('MAX_ITER: {}'.format(MAX_ITER))
+
+        while not game_exit and not replay_complete:
+            pygame.time.delay(25)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    game_exit = True
+
+            self.win.fill((0, 0, 0))  # black
+
+            for j in range(len(moves_list[i])):
+                loc = self.coordinate_to_pixel(moves_list[i][j])
+                pygame.draw.rect(self.win, (0, 255, 0), (loc[0], loc[1], 29, 29))
+
+            # print('LOC of Food: {}'.format(food_loc))
+            pygame.draw.circle(self.win, (255, 255, 0),
+                               (food_locations[i][0] + 29//4, food_locations[i][1] + 29//4), 12)
+            if i == (MAX_ITER - 2):
+                loc = self.coordinate_to_pixel(moves_list[i][0])
+                pygame.draw.rect(self.win, (255, 0, 0), (loc[0], loc[1], 29, 29))
+
+            pygame.display.update()
+            i += 1
+
+            if (i == MAX_ITER):
+                death_loc = self.coordinate_to_pixel(death_loc)
+                self.end_game_for_AI(death_loc)
+                replay_complete = True
+
     def update(self, snake, food):
         self.win.fill((0, 0, 0))  # black
 
@@ -71,7 +95,6 @@ class Field:
             pygame.draw.rect(self.win, (0, 255, 0), (ligament.x, ligament.y, snake.w, snake.h))
 
         future = snake.get_future_locations()
-        collisions, radar = snake.radar()
 
         for location in future:
             coordinates = self.coordinate_to_pixel(location)
@@ -83,43 +106,23 @@ class Field:
             # distance to food from future locations
             pygame.draw.line(
                 self.win, (255, 165, 0), (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4), (food.x, food.y))
-            print('Location: {} ,Food dist: {}'.format(location, food.distance_to_food(
-                [coordinates[0] + snake.w//4, coordinates[1] + snake.h//4])))
 
             # closest wall to a future point
             cor = self.distance_to_closest_wall(coordinates)
             pygame.draw.line(
                 self.win, (255, 165, 0), (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4), (cor[0] + snake.w//4, cor[1] + snake.w//4))
-            print('Location: {} ,Wall dist: {}'.format(location, cor[2]))
+        radar = snake.get_radar()
 
-        '''
-        # radar area
-        for detect in radar:
-            coordinates = self.coordinate_to_pixel(detect)
-            pygame.draw.rect(self.win, (170, 220, 170),
+        for location in radar:
+            coordinates = self.coordinate_to_pixel(location)
+            pygame.draw.rect(self.win, (211, 211, 211),
                              (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4, snake.w//2, snake.h//2))
-
-        '''
-        # draw the upcoming collisions
-        distance = 10
-        for collision in collisions:
-            coordinates = self.coordinate_to_pixel(collision[0])
-
-            # closest collision distance
-            if collision[1] < distance:
-                distance = collision[1]
-
-            pygame.draw.rect(self.win, (255, 0, 0),
-                             (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4, snake.w//2, snake.h//2))
-
-            # print('Collision Course at {} Distance {}'.format(collision[0], collision[1]))
-        # food location
-        print('-' * 20)
 
         pygame.draw.circle(self.win, (255, 255, 0), (food.x, food.y), 12)
         pygame.display.update()
 
     # death screen
+
     def end_game(self, snake):
         pygame.draw.rect(self.win, (255, 0, 0), (snake.head.x, snake.head.y, snake.w, snake.h))
         pygame.display.update()
@@ -133,3 +136,7 @@ class Field:
         pygame.quit()
         time.sleep(1)
         quit()
+
+    def end_game_for_AI(self, loc):
+        pygame.draw.rect(self.win, (255, 0, 0), (loc[0], loc[1], 29, 29))
+        pygame.display.update()

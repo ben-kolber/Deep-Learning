@@ -4,10 +4,10 @@ from neuron import Neuron
 
 class Layer:
 
-    def __init__(self, neurons, thresh):
+    def __init__(self, neurons):
         self.neurons = []
         for i in range(neurons):
-            self.neurons.append(Neuron(1))  # PARAM: threshold
+            self.neurons.append(Neuron())  # PARAM: threshold
 
     def init_weights(self, connect_to):
         # for each neuron in the layer

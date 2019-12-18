@@ -2,28 +2,26 @@
 
 class Body():
 
-    def __init__(self, X, Y, move):
-        print('Creating new body')
+    def __init__(self, X, Y, move, snake):
         self.exectued_move = move
         self.prev_move = 'null'
-        self.loc = []
+        self.loc = snake.get_location(X, Y)
         self.prev_loc = []
         self.x = X
         self.y = Y
 
     # action movements
     def move_right(self, snake,  ligament):
-        ligament.x += snake.w + 1
+        ligament.x += snake.w + 1.0
 
     def move_left(self, snake,  ligament):
-        ligament.x -= snake.w + 1
+        ligament.x -= snake.w + 1.0
 
     def move_up(self, snake, ligament):
-        ligament.y -= snake.h + 1
+        ligament.y -= snake.h + 1.0
 
     def move_down(self, snake, ligament):
-        ligament.y += snake.h + 1
-
+        ligament.y += snake.h + 1.0
 
     def update(self, snake, legiment, move, loc):
         self.prev_loc = loc
