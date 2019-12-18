@@ -24,8 +24,8 @@ snake.py, game.py, food.y and field.py
   
 simply run through game.py  
     
-to configure the different sensor and radar visuals, refer to field.py file under the function 'update'  
-Constructing an ANN through which the agent will both learn how to play and win (to the best of their abilities) the game of snake, with no prior knowledge of the game coded in. 
+For the AI to run, run the program autonomous_game.py
+It will initially create 2,000 Snakes, each with a ANN as a brain, and evolve over time to learn the game of snake. 
 
 
 ## Future work 
