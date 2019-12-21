@@ -150,25 +150,25 @@ class Snake:
 
             # arrow key movement -> transition state
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT]:  # and self.head.exectued_move != 'left':
+            if keys[pygame.K_LEFT] and self.head.exectued_move != 'left':
                 self.moves -= 1
                 transition = True
                 self.head_mover('left')
                 self.get_brain_input_vector(food)
 
-            if keys[pygame.K_RIGHT]:  # and not transition and self.head.exectued_move != 'right':
+            if keys[pygame.K_RIGHT] and not transition and self.head.exectued_move != 'right':
                 self.moves -= 1
                 transition = True
                 self.head_mover('right')
                 self.get_brain_input_vector(food)
 
-            if keys[pygame.K_UP]:  # and not transition and self.head.exectued_move != 'up':
+            if keys[pygame.K_UP] and not transition and self.head.exectued_move != 'up':
                 self.moves -= 1
                 transition = True
                 self.head_mover('up')
                 self.get_brain_input_vector(food)
 
-            if keys[pygame.K_DOWN]:  # and not transition and self.head.exectued_move != 'down':
+            if keys[pygame.K_DOWN] and not transition and self.head.exectued_move != 'down':
                 self.moves -= 1
                 transition = True
                 self.head_mover('down')
