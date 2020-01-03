@@ -6,20 +6,17 @@ AI for Snake
 A custom-built snake game using Python3 and the Pygame library. 
 The game can be played by both a Human in manual mode, or by the AI in autonomous mode. The AI is a genetic algorithm and artificial neural network-based agent, learning to play the game from scratch with no prior knowledge of the rules or objectives.  
 
-Requirements
-------------
+## Requirements
 pygame 
 python 3.6 
 numpy
 
 
-Human Game
------------
+# Human Game
 Simply run the program human_game.py for a snake game. control the snake using the arrows. Touching the walls or the snake itself will result in a loss. 
 
 
-AI Game
--------
+# AI Game
 Using a genetic algorithm and neural networks the agent learns how to play snake with no prior knowledge of the game, the rules, and the objective. 
 
 a population of snakes is created, with each snake having a randomly initialized neural network that dictates the action the snake will take (up, down, left, right).
@@ -35,8 +32,7 @@ Once the new population is created, the process runs again. The process will loo
 A replay of the top-performing snake in the population is run after each generation to visualize the improvement.
 
 
-File Overview
--------------
+# File Overview
 Neural Network: 
 network.py - created the ANN. 
 layer.py - an object representing each layer in the ANN. You may add as many layers as needed to the network, specified in network.py.
