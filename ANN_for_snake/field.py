@@ -21,13 +21,11 @@ class Field:
         y = coordinates[1] * self.grid_w + 1
         return([x, y])
 
-    # return distance to closest wall
     def distance_to_closest_wall(self, coordinates):
         top = coordinates[1]
         bottom = self.h - coordinates[1]
         left = coordinates[0]
         right = self.w - coordinates[0]
-
         val = min(top, bottom, left, right)
 
         # return coordinates of closest wall point and distance to it
@@ -51,8 +49,8 @@ class Field:
             pygame.draw.line(self.win, (255, 255, 255), (0, y), (self.h, y))
         pygame.display.update()
 
+    # replay the best performing snake for the AI gameplay
     def replay(self, moves_list, food_locations, death_loc, msg):
-
         game_exit = False
         replay_complete = False
         i = 0
@@ -88,7 +86,6 @@ class Field:
 
     def update(self, snake, food):
         self.win.fill((0, 0, 0))  # black
-
         # self.drawGrid()
         # snake location
         for ligament in snake.body:
@@ -111,18 +108,18 @@ class Field:
             cor = self.distance_to_closest_wall(coordinates)
             pygame.draw.line(
                 self.win, (255, 165, 0), (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4), (cor[0] + snake.w//4, cor[1] + snake.w//4))
+        '''
         radar = snake.get_radar()
 
         for location in radar:
             coordinates = self.coordinate_to_pixel(location)
             pygame.draw.rect(self.win, (211, 211, 211),
                              (coordinates[0] + snake.w//4, coordinates[1] + snake.h//4, snake.w//2, snake.h//2))
-
+        '''
         pygame.draw.circle(self.win, (255, 255, 0), (food.x, food.y), 12)
         pygame.display.update()
 
-    # death screen
-
+    # death screen manual gameplay
     def end_game(self, snake):
         pygame.draw.rect(self.win, (255, 0, 0), (snake.head.x, snake.head.y, snake.w, snake.h))
         pygame.display.update()
@@ -136,6 +133,7 @@ class Field:
         pygame.quit()
         time.sleep(1)
         quit()
+    # death screen AI gameplay
 
     def end_game_for_AI(self, loc):
         pygame.draw.rect(self.win, (255, 0, 0), (loc[0], loc[1], 29, 29))

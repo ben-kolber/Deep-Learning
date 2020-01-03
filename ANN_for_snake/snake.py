@@ -31,7 +31,6 @@ class Snake:
         self.brain = self.init_brain()
 
     # initialize brain (ANN)
-
     def init_brain(self):
         # initilize neural network
         network = Network()
@@ -49,6 +48,7 @@ class Snake:
 
         return network
 
+    # return future locations in range i
     def get_radar(self):
         radar = []
         for i in range(3):
@@ -62,12 +62,11 @@ class Snake:
             radar.append([self.head.loc[0]-i, self.head.loc[1]])
 
         return radar
-    # a list of possible future locations
-    #
+
+    # a list of possible future locations given head direction at range 1
     #               2 3 4
     #               1 * 5
     #               8 7 6
-
     def get_future_locations(self):
         future_locations = []
         # based on head direction
@@ -110,7 +109,6 @@ class Snake:
         return future_locations
 
     # status report of a specific snake ligament
-
     def report(self, ligament):
         print('Head Loc: {}'.format(ligament.loc))
         print('Previous Head Loc: {}'.format(ligament.prev_loc))
@@ -126,11 +124,11 @@ class Snake:
 
     # X,Y locations to the equivalent pixel location (corner of square)
     def coordinate_to_pixel(self, coordinates):
-        # print(coordinates)
         x = coordinates[0] * self.field.grid_w + 1
         y = coordinates[1] * self.field.grid_w + 1
         return([x, y])
 
+    # move snake
     def head_mover(self, move):
         self.head.update(self, self.head, move, self.get_location(
             self.head.x, self.head.y))
@@ -138,6 +136,7 @@ class Snake:
         if len(self.body) > 1:
             self.update_snake()
 
+    # manual gameplay movement action
     def manual_move(self, food):
         # check if any moves left
         if self.moves == 0:
@@ -148,31 +147,27 @@ class Snake:
             if event.type == pygame.QUIT:
                 self.field.end_game(self)
 
-            # arrow key movement -> transition state
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT] and self.head.exectued_move != 'left':
-                self.moves -= 1
-                transition = True
-                self.head_mover('left')
-                self.get_brain_input_vector(food)
+        # arrow key movement -> transition state
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] or self.head.exectued_move == 'left':
+            self.moves -= 1
+            transition = True
+            self.head_mover('left')
 
-            if keys[pygame.K_RIGHT] and not transition and self.head.exectued_move != 'right':
-                self.moves -= 1
-                transition = True
-                self.head_mover('right')
-                self.get_brain_input_vector(food)
+        if keys[pygame.K_RIGHT] or self.head.exectued_move == 'right':
+            self.moves -= 1
+            transition = True
+            self.head_mover('right')
 
-            if keys[pygame.K_UP] and not transition and self.head.exectued_move != 'up':
-                self.moves -= 1
-                transition = True
-                self.head_mover('up')
-                self.get_brain_input_vector(food)
+        if keys[pygame.K_UP] or self.head.exectued_move == 'up':
+            self.moves -= 1
+            transition = True
+            self.head_mover('up')
 
-            if keys[pygame.K_DOWN] and not transition and self.head.exectued_move != 'down':
-                self.moves -= 1
-                transition = True
-                self.head_mover('down')
-                self.get_brain_input_vector(food)
+        if keys[pygame.K_DOWN] or self.head.exectued_move == 'down':
+            self.moves -= 1
+            transition = True
+            self.head_mover('down')
 
         # touch walls ends the game
         if self.head.x >= self.field.w:
@@ -200,9 +195,8 @@ class Snake:
                 self.death_loc = self.head.loc
                 # self.field.end_game(self)
 
+    # generate new body part in tail's previous location
     def grow(self):
-
-        # generate new body part in tail's previous location
         loc = self.coordinate_to_pixel(self.tail.prev_loc)
         if len(loc) == 0:
             loc = self.coordinate_to_pixel(self.head.prev_loc)
@@ -229,7 +223,6 @@ class Snake:
     #             v7    v6   v5
     #
     # Movement sequence: L U R D
-
     def look_to(self, sensor, r, food):
         look = [0.0] * 3
         wall_x = self.field.w / self.field.grid_w
@@ -414,8 +407,8 @@ class Snake:
                     wall = True
                     look[2] = 1.0 / distance
 
-            '''
             # get head direction as oneHotEncoded value
+            '''
             if self.head.exectued_move == 'left':
                 head_dir_vector[0] = 1.0
             if self.head.exectued_move == 'up':
@@ -424,8 +417,10 @@ class Snake:
                 head_dir_vector[2] = 1.0
             if self.head.exectued_move == 'down':
                 head_dir_vector[3] = 1.0
+            '''
 
             # get tail direction as oneHotEncoded value
+            '''
             if self.tail.exectued_move == 'left':
                 tail_dir_vector[0] = 1.0
             if self.tail.exectued_move == 'up':
@@ -434,7 +429,6 @@ class Snake:
                 tail_dir_vector[2] = 1.0
             if self.tail.exectued_move == 'down':
                 tail_dir_vector[3] = 1.0
-
             '''
         return look
 
@@ -477,6 +471,7 @@ class Snake:
 
         return vector
 
+    # AI gameplay movement action
     def autonomous_move(self, food):
         # check if any moves left
         if self.moves == 0:
@@ -537,6 +532,7 @@ class Snake:
         else:
             self.away_from_food += 1
 
+    # Run game for AI controlled in AI_game.py
     def play_game(self, food):
         while self.dead == False:
 

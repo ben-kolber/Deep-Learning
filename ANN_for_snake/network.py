@@ -54,18 +54,14 @@ class Network:
                     self.layers[0].neurons[i].active = False
                 #print('Loading Value: {}'.format(vector[i]))
 
-            #print('' * 20)
-
             # run the hidden layers
-            #print('Running the Network...')
             while not complete:
                 #print('Running Layer {} to connected Layer number {}'.format(cur_layer, next_layer))
                 # for each connection to the next layer
                 for connection in range(len(self.layers[next_layer].neurons)):
-                    #print('Running connection number {}'.format(connection))
+                    # print('Running connection number {}'.format(connection))
                     # for each neuron in the current layer
                     sum = 0
-                    #print('Summing weight to vector -> ')
                     for neuron in self.layers[cur_layer].neurons:
                         #    print('Neuron val: {}'.format(neuron.value))
                         #    print('Weight Value: {}'.format(neuron.connection_weights[connection]))
@@ -85,8 +81,6 @@ class Network:
                 next_layer += 1
                 if next_layer == len(self.layers):
                     complete = True
-                #print('-' * 20)
-                #print(' '*20)
 
             # check the output
             max = [0, 0]

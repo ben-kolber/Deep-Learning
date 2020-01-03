@@ -15,6 +15,7 @@ class Food:
         self.loc = []
         self.generate_food()
 
+    # create food randomly within field params
     def generate_food(self):
         searching = True
         while searching:
