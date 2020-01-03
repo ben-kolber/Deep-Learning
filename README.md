@@ -1,5 +1,5 @@
 # Goal
-Getting aquainted with Keras. Still waiting on my CoreX Chroma eGPU to run heavier models.
+Getting aquainted with deep learnind.
 
 ## CNN
 Simply convolutional neural network that is trained on images of cats and dogs.   
