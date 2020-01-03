@@ -2,8 +2,7 @@ AI for Snake
 @Ben Kolber 
 
 
-Introduction
-------------
+# Introduction
 A custom-built snake game using Python3 and the Pygame library. 
 The game can be played by both a Human in manual mode, or by the AI in autonomous mode. The AI is a genetic algorithm and artificial neural network-based agent, learning to play the game from scratch with no prior knowledge of the rules or objectives.  
 
