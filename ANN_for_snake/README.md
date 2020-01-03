@@ -32,7 +32,7 @@ Once the new population is created, the process runs again. The process will loo
 A replay of the top-performing snake in the population is run after each generation to visualize the improvement.
 
 
-# File Overview
+## File Overview
 Neural Network: 
 network.py - created the ANN. 
 layer.py - an object representing each layer in the ANN. You may add as many layers as needed to the network, specified in network.py.
